@@ -13,7 +13,9 @@ from .forms import RoomForm # Import RoomForm from forms.py
 #     {'id': 3, 'name': 'Room 33'},
 # ]
 
-
+def loginPage(request):
+    context = {}
+    return render(request, 'base/login_register.html', context)
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''    # Get query from url if it exists, else set q to empty string
