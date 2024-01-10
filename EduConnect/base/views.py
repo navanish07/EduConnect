@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.db.models import Q
-
+from django.contrib.auth.models import User
+from django.contrib import messages
 from .models import Room, Topic    # Import Room model from models.py
 from .forms import RoomForm # Import RoomForm from forms.py
 
@@ -14,6 +15,14 @@ from .forms import RoomForm # Import RoomForm from forms.py
 # ]
 
 def loginPage(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        try:
+            user = User.objects.get(username=username)
+        except:
+            messages.error(request, 'Username does not exist')
+
     context = {}
     return render(request, 'base/login_register.html', context)
 
