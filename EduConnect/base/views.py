@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Room, Topic    # Import Room model from models.py
 from .forms import RoomForm # Import RoomForm from forms.py
+from django.contrib.auth import authenticate, login, logout
+
 
 # Create your views here.
 
@@ -22,6 +24,13 @@ def loginPage(request):
             user = User.objects.get(username=username)
         except:
             messages.error(request, 'Username does not exist')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else: 
+            messages.error(request, 'Username OR password is incorrect')
+
 
     context = {}
     return render(request, 'base/login_register.html', context)
