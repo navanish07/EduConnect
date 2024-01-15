@@ -6,6 +6,7 @@ from django.contrib import messages
 from .models import Room, Topic    # Import Room model from models.py
 from .forms import RoomForm # Import RoomForm from forms.py
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -62,6 +63,7 @@ def room(request, pk):
     context = { 'room': room }
     return render(request, 'base/room.html', context)
 
+@login_required(login_url='login')
 def createRoom(request):
     form = RoomForm()   # Create RoomForm object with no data which will be passed to template
     if request.method == 'POST':    # If request method is POST (form submitted)
@@ -72,7 +74,7 @@ def createRoom(request):
     context = {'form': form}   # Create empty context dictionary
     return render(request, 'base/room_form.html', context)
 
-
+@login_required(login_url='login')
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)  # Get room from database with id=pk (primary key)
     form = RoomForm(instance=room)  # Create RoomForm object with room data which will be passed to template
@@ -85,6 +87,7 @@ def updateRoom(request, pk):
     context = {'form': form}
     return render(request, 'base/room_form.html', context)
 
+@login_required(login_url='login')
 def deleteRoom(request, pk):
     room = Room.objects.get(id=pk) 
     if request.method == 'POST':
