@@ -18,8 +18,9 @@ from django.contrib.auth.decorators import login_required
 # ]
 
 def loginPage(request):
+    page = 'login'
     if request.method == 'POST':
-        username = request.POST.get('username')
+        username = request.POST.get('username').lower()
         password = request.POST.get('password')
         try:
             user = User.objects.get(username=username)
@@ -33,12 +34,15 @@ def loginPage(request):
             messages.error(request, 'Username OR password is incorrect')
 
 
-    context = {}
+    context = {'page': page}
     return render(request, 'base/login_register.html', context)
 
 def logoutUser(request):
     logout(request)
     return redirect('home')
+
+def registerPage(request):
+    return render(request, 'base/login_register.html')
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''    # Get query from url if it exists, else set q to empty string
