@@ -7,6 +7,7 @@ from .models import Room, Topic    # Import Room model from models.py
 from .forms import RoomForm # Import RoomForm from forms.py
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 
 
 # Create your views here.
@@ -42,7 +43,20 @@ def logoutUser(request):
     return redirect('home')
 
 def registerPage(request):
-    return render(request, 'base/login_register.html')
+    form = UserCreationForm()   # Create UserCreationForm object with no data which will be passed to template
+    if request.method == 'POST':    # If request method is POST (form submitted)
+        form = UserCreationForm(request.POST)
+
+        if form.is_valid():
+            user = form.save(commit=False) # Create user object with form data  but don't save to database yet (commit=False)
+            user.username = user.username.lower() # Convert username to lowercase
+            user.save()
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'An error has occurred during registration')
+
+    return render(request, 'base/login_register.html', {'form': form})  # Pass form to template
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''    # Get query from url if it exists, else set q to empty string
