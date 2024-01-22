@@ -77,8 +77,8 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)  # Get room from database with id=pk (primary key)
-    messages = room.message_set.all()  # Get all messages from database for this room
-    context = { 'room': room, 'messages': messages }
+    room_messages = room.message_set.all()  # Get all messages from database for this room
+    context = { 'room': room, 'room_messages': room_messages }
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='login')
