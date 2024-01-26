@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Room, Topic    # Import Room model from models.py
+from .models import Room, Topic, Message   # Import Room model from models.py
 from .forms import RoomForm # Import RoomForm from forms.py
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -77,7 +77,17 @@ def home(request):
 
 def room(request, pk):
     room = Room.objects.get(id=pk)  # Get room from database with id=pk (primary key)
-    room_messages = room.message_set.all()  # Get all messages from database for this room
+    room_messages = room.message_set.all().order_by('-created')  # Get all messages from database for this room
+    
+    if request.method == 'POST':
+        message = Message.objects.create(
+            user = request.user,
+            room = room,
+            body = request.POST.get('body') # Get message body from POST data (form submitted) 
+        )
+        return redirect('room', pk=room.id) # Redirect to room page with id=pk (primary key)
+
+
     context = { 'room': room, 'room_messages': room_messages }
     return render(request, 'base/room.html', context)
 
