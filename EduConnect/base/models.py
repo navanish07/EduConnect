@@ -17,7 +17,7 @@ class Topic(models.Model):
 class Room(models.Model):
     host = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)  # If user is deleted, set host to null
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True)  # If topic is deleted, set topic to null
-    # participants =
+    participants = models.ManyToManyField(User, related_name='participants', blank=True)  # blank is True because we don't want to force users to add participants 
     name = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
     updated = models.DateTimeField(auto_now=True)
