@@ -86,6 +86,7 @@ def room(request, pk):
             room = room,
             body = request.POST.get('body') # Get message body from POST data (form submitted) 
         )
+        room.participants.add(request.user)
         return redirect('room', pk=room.id) # Redirect to room page with id=pk (primary key)
 
 
@@ -123,4 +124,11 @@ def deleteRoom(request, pk):
         room.delete()
         return redirect('home')
     return render(request, 'base/delete.html', {'obj': room.name})    
-    
+
+@login_required(login_url='login')
+def deleteMessage(request, pk):
+    room = Message.objects.get(id=pk) 
+    if request.method == 'POST':
+        room.delete()
+        return redirect('home')
+    return render(request, 'base/delete.html', {'obj': room.name})      

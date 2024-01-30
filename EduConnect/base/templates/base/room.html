@@ -18,6 +18,8 @@
       <hr />
       {% for message in room_messages %}
       <div>
+        
+        <a href="{{% url 'delete-message' %}}">Delete</a>
         <small>@{{message.user}} {{message.created|timesince}} ago </small>
         <p>{{message.body}}</p>
         <hr />
@@ -42,13 +44,14 @@
   <div>
     <h3>Participants</h3>
     <hr>
-    <!-- not rendered reson:  -->
-    {% for user in participants %}
+    {% for participant in participants %}
     <div>
-      <p>@{{user.username}}</p>
+      <small>@{{participant.username}}</small>
+      <hr />
     </div>
     {% endfor %}
   </div>
+
 </div>
 
 {% endblock %}
