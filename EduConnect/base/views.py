@@ -127,8 +127,8 @@ def deleteRoom(request, pk):
 
 @login_required(login_url='login')
 def deleteMessage(request, pk):
-    room = Message.objects.get(id=pk) 
+    message = Message.objects.get(id=pk) 
     if request.method == 'POST':
-        room.delete()
+        message.delete()
         return redirect('home')
-    return render(request, 'base/delete.html', {'obj': room.name})      
+    return render(request, 'base/delete.html', {'obj': message.body})      
