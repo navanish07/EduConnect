@@ -38,5 +38,8 @@ class Message(models.Model):
     updated = models.DateTimeField(auto_now=True)   # When message was updated
     created = models.DateTimeField(auto_now_add=True)   # When message was created  
 
+    class Meta:
+        ordering = ['-updated', '-created']    # Order by updated and created fields in descending order
+
     def __str__(self):
         return self.body[:50]
